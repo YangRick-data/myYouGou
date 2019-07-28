@@ -72,7 +72,7 @@ export default {
         this.boxlist = message;
       }
     },
-    //获取楼层数据
+    //获取楼层的数据
     async getfloor() {
       let res = await wxrequest({
         url: "api/public/v1/home/floordata"
