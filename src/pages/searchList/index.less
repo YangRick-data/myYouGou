@@ -1,0 +1,83 @@
+.fixbox {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+.nav {
+  width: 100%;
+  height: 100rpx;
+  background-color: #eeeeee;
+  padding: 20rpx 16rpx;
+  box-sizing: border-box;
+  position: relative;
+  input {
+    width: 100%;
+    height: 60rpx;
+    padding-left: 50rpx;
+    font-size: 14px;
+    background-color: #ffffff;
+    border-radius: 10px;
+  }
+  icon {
+    position: absolute;
+    top: 50%;
+    left: 30rpx;
+    transform: translate(0, -50%);
+  }
+}
+.myFbox {
+  width: 100%;
+  height: 100rpx;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  background-color: #fff;
+  .item {
+    flex: 1;
+    text-align: center;
+    line-height: 100rpx;
+    &.active {
+      color: #eb4450;
+    }
+  }
+}
+.goodsList {
+  margin-top: 200rpx;
+  width: 100%;
+  padding: 0rpx 20rpx;
+  box-sizing: border-box;
+  .box {
+    padding: 30rpx 0rpx;
+    widows: 100%;
+    height: 200rpx;
+    border-bottom: 1px solid #cccccc;
+    display: flex;
+    .left {
+      width: 200rpx;
+      height: 200rpx;
+      img {
+        width: 200rpx;
+        height: 200rpx;
+      }
+    }
+    .right {
+      flex: 1;
+      margin-left: 25rpx;
+      .word {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .price {
+        margin-top: 60rpx;
+        color: #eb4450;
+        span {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
