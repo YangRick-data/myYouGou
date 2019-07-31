@@ -2,7 +2,7 @@
   <div>
     <!-- 搜索 -->
     <div class="nav">
-      <input type="text" placeholder="搜索" />
+      <input @click="toSearch" type="text" placeholder="搜索" />
       <icon type="search" size="14" />
     </div>
     <!-- 轮播 -->
@@ -84,6 +84,12 @@ export default {
       if (meta.status === 200) {
         this.floorlist = message;
       }
+    },
+    //进入搜索页面
+    toSearch() {
+      wx.navigateTo({
+        url: "pages/search/main"
+      });
     }
   },
 
