@@ -2,7 +2,24 @@
   <div>
     <!-- 搜索 -->
     <div class="nav">
-      <input @confirm="confirm" v-model="query" type="text" placeholder="请输入要搜索的内容" />
+      <div class="search">
+        <input
+          @input="think"
+          @confirm="confirm"
+          v-model="query"
+          type="text"
+          placeholder="请输入要搜索的内容"
+        />
+        <div class="think" v-if="thinkList.length!=0">
+          <div
+            @click="thinkTo(item.goods_name)"
+            class="item"
+            v-for="(item, index) in thinkList"
+            :key="index"
+          >{{item.goods_name}}</div>
+        </div>
+      </div>
+
       <icon type="search" size="14" />
       <button @click="clear" v-if="query.length!==0">取消</button>
     </div>
@@ -24,13 +41,17 @@
 </template>
 
 <script>
+// 导入异步请求的文件
+import wxrequest from "../../utils/wxrequest.js";
 export default {
   data() {
     return {
       // 搜索的关键字
       query: "",
       //保存关键字的数组
-      list: []
+      list: [],
+      // 保存联想的内容
+      thinkList: []
     };
   },
   onLoad() {
@@ -71,6 +92,7 @@ export default {
       this.list.unshift(this.query);
       //在保存到 storage 中之前需要去重
       this.list = [...new Set(this.list)];
+      //使用 wx 中的 storage 进行保存
       wx.setStorageSync("query", JSON.stringify(this.list));
     },
     clearhis() {
@@ -87,6 +109,42 @@ export default {
           }
         }
       });
+    },
+    think() {
+      if (this.time) {
+        clearTimeout(this.time);
+      }
+      this.time = setTimeout(async () => {
+        if (this.query.length === 0) {
+          this.thinkList = [];
+        } else {
+          //发送请求到服务器得到联想的数据
+          var res = await wxrequest({
+            url: `api/public/v1/goods/search?query=${
+              this.query
+            }&pagesize=10&pagenum=1`
+          });
+          let { meta, message } = res.data;
+          if (meta.status === 200) {
+            this.thinkList = message.goods;
+            console.log(this.thinkList);
+          }
+        }
+      }, 500);
+    },
+    //点击联想内容时触发
+    thinkTo(name) {
+      this.query = name;
+      //跳转到搜索列表
+      wx.navigateTo({
+        url: `/pages/searchList/main?query=${name}`
+      });
+      //将搜索关键字存储到 storage 中
+      this.list.unshift(this.query);
+      //在保存到 storage 中之前需要去重
+      this.list = [...new Set(this.list)];
+      //使用 wx 中的 storage 进行保存
+      wx.setStorageSync("query", JSON.stringify(this.list));
     }
   }
 };
@@ -102,14 +160,39 @@ export default {
   position: relative;
   display: flex;
   z-index: 1000;
-  input {
+
+  .search {
     width: 100%;
     height: 60rpx;
     background-color: #fff;
+    line-height: 60rpx;
     padding-left: 60rpx;
     box-sizing: border-box;
     font-size: 14px;
     border-radius: 5px;
+    position: relative;
+    input {
+      width: 100%;
+      height: 60rpx;
+      background-color: #fff;
+      box-sizing: border-box;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+    .think {
+      position: absolute;
+      top: 60rpx;
+      left: 0px;
+      width: 100%;
+      background: #ddd;
+      .item {
+        line-height: 60rpx;
+        padding: 0 20rpx;
+        white-space: nowrap; /*强制一行显示*/
+        overflow: hidden; /*超出部分隐藏*/
+        text-overflow: ellipsis; /*最后添加省略号*/
+      }
+    }
   }
   button {
     width: 160rpx;
@@ -148,6 +231,9 @@ export default {
       background-color: #ddd;
       margin-right: 30rpx;
       margin-bottom: 18rpx;
+      white-space: nowrap; /*强制一行显示*/
+      overflow: hidden; /*超出部分隐藏*/
+      text-overflow: ellipsis; /*最后添加省略号*/
     }
   }
 }
