@@ -169,7 +169,7 @@ export default {
     padding-left: 60rpx;
     box-sizing: border-box;
     font-size: 14px;
-    border-radius: 5px;
+    border-radius: 6px;
     position: relative;
     input {
       width: 100%;
