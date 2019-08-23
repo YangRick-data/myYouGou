@@ -155,7 +155,7 @@ export default {
   width: 100%;
   height: 100rpx;
   padding: 20rpx 16rpx;
-  background-color: #eee;
+  background-color: #eeee;
   box-sizing: border-box;
   position: relative;
   display: flex;
